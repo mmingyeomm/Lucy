@@ -129,6 +129,9 @@ export default function Page({ agentId }: { agentId: UUID }) {
             selectedFile?: File | null;
         }) => apiClient.sendMessage(agentId, message, selectedFile),
         onSuccess: (newMessages: ContentWithUser[]) => {
+
+            console.log("AI Response text:", newMessages[0]?.text);
+            
             queryClient.setQueryData(
                 ["messages", agentId],
                 (old: ContentWithUser[] = []) => [
