@@ -23,6 +23,9 @@ import type { IAttachment } from "@/types";
 import { AudioRecorder } from "./audio-recorder";
 import { Badge } from "./ui/badge";
 import { useAutoScroll } from "./ui/chat/hooks/useAutoScroll";
+import { sendTransaction } from "@/interact";
+import { useWallet } from "@solana/wallet-adapter-react";
+
 
 type ExtraContentFields = {
     user: string;
@@ -43,8 +46,9 @@ export default function Page({ agentId }: { agentId: UUID }) {
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
-
+    const { publicKey, sendTransaction: walletSendTransaction } = useWallet();
     const queryClient = useQueryClient();
+
 
     const getMessageVariant = (role: string) =>
         role !== "user" ? "received" : "sent";
@@ -121,17 +125,36 @@ export default function Page({ agentId }: { agentId: UUID }) {
 
     const sendMessageMutation = useMutation({
         mutationKey: ["send_message", agentId],
-        mutationFn: ({
+        mutationFn: async ({
             message,
             selectedFile,
         }: {
             message: string;
             selectedFile?: File | null;
-        }) => apiClient.sendMessage(agentId, message, selectedFile),
-        onSuccess: (newMessages: ContentWithUser[]) => {
+        }) => {
+            // Send the message to the backend
+            const response = await apiClient.sendMessage(agentId, message, selectedFile);
 
-            console.log("AI Response text:", newMessages[0]?.text);
-            
+            // Send the Solana transaction
+            if (publicKey && walletSendTransaction) {
+                try {
+                    await sendTransaction(
+                        "5KnRkA6WaZu3SZKGsY7KhkBw8gNoKQeD7nV3vfanGP1e", // Recipient address
+                        0.001, // Amount in SOL
+                        publicKey,
+                        walletSendTransaction
+                    );
+                    console.log("Transaction sent successfully!");
+                } catch (error) {
+                    console.error("Failed to send transaction:", error);
+                }
+            } else {
+                console.error("Wallet not connected!");
+            }
+
+            return response;
+        },
+        onSuccess: (newMessages: ContentWithUser[]) => {
             queryClient.setQueryData(
                 ["messages", agentId],
                 (old: ContentWithUser[] = []) => [
