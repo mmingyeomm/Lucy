@@ -160,24 +160,24 @@ export const models: Models = {
     [ModelProviderName.GROK]: {
         endpoint: "https://api.x.ai/v1",
         model: {
-            [ModelClass.SMALL]: {
-                name: settings.SMALL_GROK_MODEL || "grok-2-1212",
-                stop: [],
-                maxInputTokens: 128000,
-                maxOutputTokens: 8192,
-                frequency_penalty: 0.4,
-                presence_penalty: 0.4,
-                temperature: 0.7,
-            },
-            [ModelClass.MEDIUM]: {
-                name: settings.MEDIUM_GROK_MODEL || "grok-2-1212",
-                stop: [],
-                maxInputTokens: 128000,
-                maxOutputTokens: 8192,
-                frequency_penalty: 0.4,
-                presence_penalty: 0.4,
-                temperature: 0.7,
-            },
+            // [ModelClass.SMALL]: {
+            //     name: settings.SMALL_GROK_MODEL || "grok-2-1212",
+            //     stop: [],
+            //     maxInputTokens: 128000,
+            //     maxOutputTokens: 8192,
+            //     frequency_penalty: 0.4,
+            //     presence_penalty: 0.4,
+            //     temperature: 0.7,
+            // // },
+            // [ModelClass.MEDIUM]: {
+            //     name: settings.MEDIUM_GROK_MODEL || "grok-2-1212",
+            //     stop: [],
+            //     maxInputTokens: 128000,
+            //     maxOutputTokens: 8192,
+            //     frequency_penalty: 0.4,
+            //     presence_penalty: 0.4,
+            //     temperature: 0.7,
+            // },
             [ModelClass.LARGE]: {
                 name: settings.LARGE_GROK_MODEL || "grok-2-1212",
                 stop: [],
