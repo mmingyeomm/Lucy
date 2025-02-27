@@ -40,8 +40,9 @@ function App() {
                                 <AppSidebar />
                                 <SidebarInset>
                                     <div className="flex flex-1 flex-col gap-4 size-full container relative">
-                                        {/* WalletConnectButton positioned at top right */}
-                                        <div className="absolute top-4 right-4 z-10">
+                                        {/* WalletConnectButton positioned at top right with Lucy style */}
+                                        <div className="absolute top-4 right-4 z-10 flex items-center">
+                                            <div className="text-xs text-primary/50 font-mono mr-2 hidden md:block">SECURE NETWORK</div>
                                             <WalletConnectButton />
                                         </div>
 

@@ -52,6 +52,28 @@
     animation: glitch-2 3s infinite linear alternate-reverse;
 }
 
+.glitch-overlay {
+    animation: glitch-overlay 0.2s infinite;
+}
+
+@keyframes glitch-overlay {
+    0% {
+        opacity: 0.05;
+    }
+    30% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 0.05;
+    }
+    70% {
+        opacity: 0.15;
+    }
+    100% {
+        opacity: 0.05;
+    }
+}
+
 @keyframes glitch {
     0% {
         text-shadow: 0 0 5px hsla(180, 100%, 80%, 0.8), 0 0 10px hsla(180, 100%, 80%, 0.5);

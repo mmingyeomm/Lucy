@@ -3,8 +3,9 @@ import { SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { Activity } from "lucide-react";
+import { Activity, Wifi, SignalHigh } from "lucide-react";
 
 export default function ConnectionStatus() {
     const [queryTime, setQueryTime] = useState<number | null>(null);
@@ -30,36 +31,48 @@ export default function ConnectionStatus() {
         <SidebarMenuItem>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <SidebarMenuButton>
-                        <div className="flex flex-col gap-1 select-none transition-all duration-200">
-                            <div className="flex items-center gap-1">
-                                <div
-                                    className={cn([
-                                        "h-2.5 w-2.5 rounded-full",
-                                        isLoading
-                                            ? "bg-muted-foreground"
-                                            : connected
-                                              ? "bg-green-600"
-                                              : "bg-red-600",
-                                    ])}
+                    <SidebarMenuButton className="font-mono text-xs">
+                        <motion.div 
+                            className="relative"
+                            animate={connected ? {
+                                scale: [1, 1.05, 1],
+                            } : {}}
+                            transition={{ 
+                                duration: 0.5, 
+                                repeat: isLoading ? Infinity : 0,
+                                repeatType: "reverse"
+                            }}
+                        >
+                            {isLoading ? (
+                                <Wifi className="text-primary/60" />
+                            ) : connected ? (
+                                <SignalHigh className="text-primary" />
+                            ) : (
+                                <Wifi className="text-red-500" />
+                            )}
+                            
+                            {connected && (
+                                <motion.div 
+                                    className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-primary"
+                                    animate={{
+                                        opacity: [0.5, 1, 0.5]
+                                    }}
+                                    transition={{
+                                        duration: 1.5,
+                                        repeat: Infinity,
+                                        repeatType: "reverse"
+                                    }}
                                 />
-                                <span
-                                    className={cn([
-                                        "text-xs",
-                                        isLoading
-                                            ? "text-muted-foreground"
-                                            : connected
-                                              ? "text-green-600"
-                                              : "text-red-600",
-                                    ])}
-                                >
-                                    {isLoading
-                                        ? "Connecting..."
-                                        : connected
-                                          ? "Connected"
-                                          : "Disconnected"}
-                                </span>
-                            </div>
+                            )}
+                        </motion.div>
+                        
+                        <div className="flex flex-col text-left">
+                            <span className="uppercase tracking-wide">
+                                {isLoading ? "SCANNING" : connected ? "CONNECTED" : "OFFLINE"}
+                            </span>
+                            {connected && queryTime && (
+                                <span className="text-[10px] text-primary/50">{queryTime.toFixed(0)}ms LATENCY</span>
+                            )}
                         </div>
                     </SidebarMenuButton>
                 </TooltipTrigger>

@@ -26,9 +26,13 @@ export function WalletConnectButton() {
   return (
     <button
       onClick={handleConnectClick}
-      className="bg-primary hover:bg-cyan-400 text-primary-foreground font-medium py-2 px-4 rounded-md transition-colors border border-cyan-300/20"
+      className="bg-background hover:bg-primary/20 text-primary border border-primary/30 font-mono py-2 px-4 rounded-sm transition-colors relative overflow-hidden group"
     >
-      {connected ? `연결됨: ${walletAddress}` : '지갑 연결'}
+      <span className="relative z-10 flex items-center">
+        <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2 animate-pulse"></span>
+        {connected ? `WALLET: ${walletAddress}` : 'CONNECT WALLET'}
+      </span>
+      <span className="absolute inset-0 translate-y-full bg-primary/10 transition-transform duration-300 group-hover:translate-y-0"></span>
     </button>
   );
 }
