@@ -26,7 +26,7 @@ export function WalletConnectButton() {
   return (
     <button
       onClick={handleConnectClick}
-      className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+      className="bg-primary hover:bg-cyan-400 text-primary-foreground font-medium py-2 px-4 rounded-md transition-colors border border-cyan-300/20"
     >
       {connected ? `연결됨: ${walletAddress}` : '지갑 연결'}
     </button>

@@ -36,17 +36,13 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <NavLink to="/">
-                                <img
-                                    alt="elizaos-icon"
-                                    src="/elizaos-icon.png"
-                                    width="100%"
-                                    height="100%"
-                                    className="size-7"
-                                />
+                                <div className="size-7 flex items-center justify-center bg-primary text-primary-foreground font-bold rounded-full border border-cyan-300/30">
+                                    L
+                                </div>
 
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-semibold">
-                                        ElizaOS
+                                        Lucy
                                     </span>
                                     <span className="">v{info?.version}</span>
                                 </div>

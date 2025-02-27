@@ -219,21 +219,47 @@ export default function Page({ agentId }: { agentId: UUID }) {
                             >
                                 <ChatBubble
                                     variant={variant}
-                                    className="flex flex-row items-center gap-2"
+                                    className="flex flex-row items-start gap-2"
                                 >
                                     {message?.user !== "user" ? (
-                                        <Avatar className="size-8 p-1 border rounded-full select-none">
-                                            <AvatarImage src="/elizaos-icon.png" />
-                                        </Avatar>
+                                        <div className="ai-avatar size-10">
+                                            <div className="ai-avatar-ring"></div>
+                                            <div className="ai-avatar-scan"></div>
+                                            <div className="ai-face-container">
+                                                <div className="ai-face">
+                                                    <div className="ai-face-inner">
+                                                        <div className="ai-patterns"></div>
+                                                        <div className="ai-circuits"></div>
+                                                        <div className="ai-eye ai-eye-left"></div>
+                                                        <div className="ai-eye ai-eye-right"></div>
+                                                        <div className="ai-mouth"></div>
+                                                        
+                                                        {/* Voice wave animation */}
+                                                        {message?.isLoading && (
+                                                            <div className="voice-wave">
+                                                                <div className="voice-line"></div>
+                                                                <div className="voice-line"></div>
+                                                                <div className="voice-line"></div>
+                                                                <div className="voice-line"></div>
+                                                                <div className="voice-line"></div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     ) : null}
                                     <div className="flex flex-col">
                                         <ChatBubbleMessage
                                             isLoading={message?.isLoading}
                                         >
                                             {message?.user !== "user" ? (
-                                                <AIWriter>
-                                                    {message?.text}
-                                                </AIWriter>
+                                                <div className="relative">
+                                                    <AIWriter>
+                                                        {message?.text}
+                                                    </AIWriter>
+                                                    <div className="absolute -left-1 top-0 w-[3px] h-full bg-primary/20 rounded-full"></div>
+                                                </div>
                                             ) : (
                                                 message?.text
                                             )}
@@ -312,7 +338,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
                 <form
                     ref={formRef}
                     onSubmit={handleSendMessage}
-                    className="relative rounded-md border bg-card"
+                    className="relative rounded-md border border-primary/20 bg-card/80 backdrop-blur-sm"
                 >
                     {selectedFile ? (
                         <div className="p-3 flex">
@@ -341,7 +367,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
                         value={input}
                         onChange={({ target }) => setInput(target.value)}
                         placeholder="Type your message here..."
-                        className="min-h-12 resize-none rounded-md bg-card border-0 p-3 shadow-none focus-visible:ring-0"
+                        className="min-h-12 resize-none rounded-md bg-transparent border-0 p-3 shadow-none focus-visible:ring-0"
                     />
                     <div className="flex items-center p-3 pt-0">
                         <Tooltip>
@@ -382,7 +408,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
                             disabled={!input || sendMessageMutation?.isPending}
                             type="submit"
                             size="sm"
-                            className="ml-auto gap-1.5 h-[30px]"
+                            className="ml-auto gap-1.5 h-[30px] cyber-button"
                         >
                             {sendMessageMutation?.isPending
                                 ? "..."

@@ -39,9 +39,9 @@ function App() {
                             <SidebarProvider>
                                 <AppSidebar />
                                 <SidebarInset>
-                                    <div className="flex flex-1 flex-col gap-4 size-full container">
-                                        {/* Add WalletConnectButton for wallet functionality */}
-                                        <div className="wallet-connect-container">
+                                    <div className="flex flex-1 flex-col gap-4 size-full container relative">
+                                        {/* WalletConnectButton positioned at top right */}
+                                        <div className="absolute top-4 right-4 z-10">
                                             <WalletConnectButton />
                                         </div>
 
