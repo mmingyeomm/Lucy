@@ -1,0 +1,50 @@
+this is an ai-agent that auto deploys contract on solana 
+
+at client if response from llm starts with phase 3: there should be a contract in the same response like so that starts with rust and ends with end contract 
+what you need to do is send this contract to backend to deploy it on backend and when deployment is done send the contract address back to client 
+
+here is the example of response from llm:
+Phase 3: Here is the Solana smart contract code for a simple deposit function using SOL:
+
+rust
+use anchor_lang::prelude::*;
+
+#[program]
+pub mod simple_deposit {
+    use super::*;
+
+    pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
+        let depositor = &mut ctx.accounts.depositor;
+        let vault = &mut ctx.accounts.vault;
+
+        depositor.transfer(vault.to_account_info(), amount)?;
+
+        Ok(())
+}
+}
+
+#[account]
+pub struct Depositor {
+    pub bump: u8,
+}
+
+#[account]
+pub struct Vault {
+    pub balance: u64,
+}
+
+#[derive(Accounts)]
+pub struct Deposit<'info> {
+    #[account(mut)]
+    pub depositor: Signer<'info>,
+    #[account(init, payer = depositor, space = 8 + 8, seeds = [b"vault"], bump)]
+    pub vault: Account<'info, Vault>,
+    pub system_program: Program<'info, System>,
+}
+
+
+end contract
+
+Would you like to deploy this code?
+
+

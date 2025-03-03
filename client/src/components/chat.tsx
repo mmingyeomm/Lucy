@@ -46,7 +46,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
-    const { publicKey, sendTransaction: walletSendTransaction } = useWallet();
+    // const { publicKey, sendTransaction: walletSendTransaction } = useWallet();
     const queryClient = useQueryClient();
 
 
@@ -128,6 +128,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
         mutationFn: async ({
             message,
             selectedFile,
+
         }: {
             message: string;
             selectedFile?: File | null;
@@ -149,27 +150,26 @@ export default function Page({ agentId }: { agentId: UUID }) {
                 });
 
                 console.log(deployContract()); 
-
                 
             }
 
 
             // Send the Solana transaction
-            if (publicKey && walletSendTransaction) {
-                try {
-                    await sendTransaction(
-                        "5KnRkA6WaZu3SZKGsY7KhkBw8gNoKQeD7nV3vfanGP1e", // Recipient address
-                        0.001, // Amount in SOL
-                        publicKey,
-                        walletSendTransaction
-                    );
-                    console.log("Transaction sent successfully!");
-                } catch (error) {
-                    console.error("Failed to send transaction:", error);
-                }
-            } else {
-                console.error("Wallet not connected!");
-            }
+            // if (publicKey && walletSendTransaction) {
+            //     try {
+            //         await sendTransaction(
+            //             "5KnRkA6WaZu3SZKGsY7KhkBw8gNoKQeD7nV3vfanGP1e", // Recipient address
+            //             0.001, // Amount in SOL
+            //             publicKey,
+            //             walletSendTransaction
+            //         );
+            //         console.log("Transaction sent successfully!");
+            //     } catch (error) {
+            //         console.error("Failed to send transaction:", error);
+            //     }
+            // } else {
+            //     console.error("Wallet not connected!");
+            // }
 
             return response;
         },
@@ -193,6 +193,8 @@ export default function Page({ agentId }: { agentId: UUID }) {
             });
         },
     });
+
+
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
