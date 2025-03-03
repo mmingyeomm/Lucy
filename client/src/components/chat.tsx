@@ -141,7 +141,9 @@ export default function Page({ agentId }: { agentId: UUID }) {
             const responseText = response[0].text;
             const firstTwoWords = responseText.trim().split(/\s+/).slice(0, 2).join(" ");
             if (firstTwoWords === "Phase 3:") {
+                console.log("Detected Phase 3 response, initiating contract deployment...");
 
+                // Add a deployment message
                 response.push({
                     text: "Deployment in progress...",
                     user: "system",
@@ -149,8 +151,40 @@ export default function Page({ agentId }: { agentId: UUID }) {
                     source: "System"
                 });
 
-                console.log(deployContract()); 
-                
+                // Start the deployment process
+                deployContract(responseText).then(deploymentResult => {
+                    console.log("Deployment process completed:", deploymentResult);
+                    
+                    // Add the deployment result as a new message
+                    queryClient.setQueryData(
+                        ["messages", agentId],
+                        (old: ContentWithUser[] = []) => [
+                            ...old.filter(msg => msg.text !== "Deployment in progress..."),
+                            {
+                                text: deploymentResult,
+                                user: "system",
+                                createdAt: Date.now(),
+                                source: "Deployment"
+                            }
+                        ]
+                    );
+                }).catch(error => {
+                    console.error("Deployment failed:", error);
+                    
+                    // Add the error message
+                    queryClient.setQueryData(
+                        ["messages", agentId],
+                        (old: ContentWithUser[] = []) => [
+                            ...old.filter(msg => msg.text !== "Deployment in progress..."),
+                            {
+                                text: `Deployment failed: ${error.message || "Unknown error"}`,
+                                user: "system",
+                                createdAt: Date.now(),
+                                source: "Deployment"
+                            }
+                        ]
+                    );
+                });
             }
 
 

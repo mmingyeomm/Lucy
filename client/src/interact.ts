@@ -46,9 +46,42 @@ export const sendTransaction = async (
 };
 
 
-export const deployContract = async () => {
+export const deployContract = async (response: string): Promise<string> => {
+    try {
+        console.log("Processing response for contract deployment...");
 
-    return "deploying contract"
-
-
+        // Extract the contract code between "rust" and "end contract"
+        const rustRegex = /rust\n([\s\S]*?)end contract/;
+        const match = response.match(rustRegex);
+        
+        if (!match || !match[1]) {
+            console.error("No valid contract found in the response");
+            return "Error: No valid contract code found";
+        }
+        
+        const contractCode = match[1].trim();
+        console.log("Extracted contract code:", contractCode);
+        
+        // Send the contract to the backend for deployment
+        const backendUrl = "http://localhost:8080/deploy";
+        const deployResponse = await fetch(backendUrl, {  // 이름 변경: response → deployResponse
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ contract_code: contractCode }),
+        });
+        
+        if (!deployResponse.ok) {  // 이름 변경 적용
+            throw new Error(`Server responded with ${deployResponse.status}: ${deployResponse.statusText}`);
+        }
+        
+        const data = await deployResponse.json();  // 이름 변경 적용
+        console.log("Deployment result:", data);
+        
+        return `Contract deployed successfully! Address: ${data.contract_address}`;
+    } catch (error) {
+        console.error("Error deploying contract:", error);
+        return `Error deploying contract: ${error instanceof Error ? error.message : String(error)}`;
+    }
 }
