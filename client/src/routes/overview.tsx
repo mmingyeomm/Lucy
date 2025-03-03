@@ -3,6 +3,7 @@ import { apiClient } from "@/lib/api";
 import Overview from "@/components/overview";
 import { useParams } from "react-router";
 import type { UUID } from "@elizaos/core";
+import { NavigationBar } from "@/components/navigation-bar";
 
 export default function AgentRoute() {
     const { agentId } = useParams<{ agentId: UUID }>();
@@ -20,5 +21,14 @@ export default function AgentRoute() {
 
     if (!character) return null;
 
-    return <Overview character={character} />;
+    return (
+        <div className="relative flex flex-col h-screen">
+            <NavigationBar />
+            
+            {/* Overview Area */}
+            <div className="flex-1 overflow-auto p-6">
+                <Overview character={character} />
+            </div>
+        </div>
+    );
 }
