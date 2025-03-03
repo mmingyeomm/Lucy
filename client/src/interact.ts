@@ -63,8 +63,8 @@ export const deployContract = async (response: string): Promise<string> => {
         console.log("Extracted contract code:", contractCode);
         
         // Send the contract to the backend for deployment
-        const backendUrl = "http://localhost:8080/deploy";
-        const deployResponse = await fetch(backendUrl, {  // 이름 변경: response → deployResponse
+        const backendUrl = "http://localhost:3002/deploy";
+        const deployResponse = await fetch(backendUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
