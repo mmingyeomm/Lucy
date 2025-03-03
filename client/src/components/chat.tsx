@@ -23,7 +23,7 @@ import type { IAttachment } from "@/types";
 import { AudioRecorder } from "./audio-recorder";
 import { Badge } from "./ui/badge";
 import { useAutoScroll } from "./ui/chat/hooks/useAutoScroll";
-import { sendTransaction } from "@/interact";
+import { deployContract, sendTransaction } from "@/interact";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 
@@ -134,6 +134,25 @@ export default function Page({ agentId }: { agentId: UUID }) {
         }) => {
             // Send the message to the backend
             const response = await apiClient.sendMessage(agentId, message, selectedFile);
+
+            console.log(response[0].text);
+
+            const responseText = response[0].text;
+            const firstTwoWords = responseText.trim().split(/\s+/).slice(0, 2).join(" ");
+            if (firstTwoWords === "Phase 3:") {
+
+                response.push({
+                    text: "Deployment in progress...",
+                    user: "system",
+                    createdAt: Date.now(),
+                    source: "System"
+                });
+
+                console.log(deployContract()); 
+
+                
+            }
+
 
             // Send the Solana transaction
             if (publicKey && walletSendTransaction) {

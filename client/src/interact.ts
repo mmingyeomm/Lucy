@@ -44,3 +44,11 @@ export const sendTransaction = async (
         throw error;
     }
 };
+
+
+export const deployContract = async () => {
+
+    return "deploying contract"
+
+
+}
