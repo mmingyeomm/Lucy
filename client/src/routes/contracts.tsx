@@ -9,10 +9,11 @@ export default function ContractsRoute() {
     const [loading, setLoading] = useState(true);
     const [contracts, setContracts] = useState<any[]>([]);
 
-    // Simulated contract data - in a real app, you'd fetch this from your API
+    // Load contract data from localStorage and combine with default contracts
     useEffect(() => {
         const timer = setTimeout(() => {
-            setContracts([
+            // Default contracts that always appear
+            const defaultContracts = [
                 {
                     id: "contract-1",
                     name: "LucyDAO Governance",
@@ -40,7 +41,21 @@ export default function ContractsRoute() {
                     status: "Active",
                     interactions: 189
                 }
-            ]);
+            ];
+            
+            // Try to load user deployed contracts from localStorage
+            try {
+                const storedContractsJson = localStorage.getItem('lucyDeployedContracts');
+                const userContracts = storedContractsJson ? JSON.parse(storedContractsJson) : [];
+                
+                // Combine default contracts with user deployed contracts
+                setContracts([...defaultContracts, ...userContracts]);
+                console.log("Loaded contracts:", [...defaultContracts, ...userContracts]);
+            } catch (error) {
+                console.error("Failed to load contracts from localStorage:", error);
+                setContracts(defaultContracts);
+            }
+            
             setLoading(false);
         }, 1500);
         
@@ -50,6 +65,49 @@ export default function ContractsRoute() {
     const refreshContracts = () => {
         setLoading(true);
         setTimeout(() => {
+            // Default contracts that always appear
+            const defaultContracts = [
+                {
+                    id: "contract-1",
+                    name: "LucyDAO Governance",
+                    address: "0x8c1eD7e19abAa9f23c476dA86Dc1577F1Ef401f8",
+                    network: "Solana Mainnet",
+                    deployDate: "2025-02-15",
+                    status: "Active",
+                    interactions: 243
+                },
+                {
+                    id: "contract-2",
+                    name: "Neural Network Bridge",
+                    address: "0x2F9BeBbE6AeF1C8cA02c9e85619924D47e97bF69",
+                    network: "Solana Testnet",
+                    deployDate: "2025-03-01",
+                    status: "Testing",
+                    interactions: 56
+                },
+                {
+                    id: "contract-3",
+                    name: "LucyAI Storage",
+                    address: "0xE32d51C3142257F3F2b43f128Db89c8134afC901",
+                    network: "Solana Mainnet",
+                    deployDate: "2025-02-28",
+                    status: "Active",
+                    interactions: 189
+                }
+            ];
+            
+            // Try to load user deployed contracts from localStorage
+            try {
+                const storedContractsJson = localStorage.getItem('lucyDeployedContracts');
+                const userContracts = storedContractsJson ? JSON.parse(storedContractsJson) : [];
+                
+                // Combine default contracts with user deployed contracts
+                setContracts([...defaultContracts, ...userContracts]);
+            } catch (error) {
+                console.error("Failed to load contracts from localStorage:", error);
+                setContracts(defaultContracts);
+            }
+            
             setLoading(false);
         }, 1000);
     };
@@ -95,7 +153,7 @@ export default function ContractsRoute() {
                                 </Card>
                             ))}
                         </div>
-                    ) : (
+                    ) : contracts.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {contracts.map((contract) => (
                                 <motion.div
@@ -127,7 +185,7 @@ export default function ContractsRoute() {
                                             <div className="space-y-2 text-sm">
                                                 <div className="flex justify-between">
                                                     <span className="text-muted-foreground">Address:</span>
-                                                    <code className="font-mono text-xs bg-primary/5 px-1 py-0.5 rounded">
+                                                    <code className="font-mono text-xs bg-primary/5 px-1 py-0.5 rounded" title={contract.address}>
                                                         {contract.address.substring(0, 8)}...{contract.address.substring(contract.address.length - 6)}
                                                     </code>
                                                 </div>
@@ -155,6 +213,24 @@ export default function ContractsRoute() {
                                     </Card>
                                 </motion.div>
                             ))}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center p-12 text-center">
+                            <div className="rounded-full bg-primary/10 p-6 mb-6">
+                                <Code className="h-12 w-12 text-primary/70" />
+                            </div>
+                            <h3 className="text-xl font-semibold mb-2">No Custom Contracts Yet</h3>
+                            <p className="text-muted-foreground max-w-md mb-6">
+                                You haven't deployed any custom contracts with Lucy yet. Use the chat interface to create and deploy a new contract.
+                            </p>
+                            <Button 
+                                className="gap-2" 
+                                variant="outline"
+                                onClick={refreshContracts}
+                            >
+                                <RefreshCw className="h-4 w-4" />
+                                Refresh Contracts
+                            </Button>
                         </div>
                     )}
                 </div>

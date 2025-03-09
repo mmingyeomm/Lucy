@@ -1,11 +1,127 @@
-this is an ai-agent that auto deploys contract on solana 
 
-now after pahse 3 deployment is completed 
-
-
-here is the example of response from llm:
-Phase 4: The example contract for token transfer has been successfully deployed. The deployed smart contract can be registered on the Lucy web for ongoing management. Would you like to proceed with management registration? (Yes or No)
+this is the workflow of interaction with lucy but we have a problem 
 
 
+Contract deployed successfully! Address: B9ikFyh9XoGLzeDr6tAz1hX68CkrRwJrRXLqSZvGi6z9 this address fetching takes too long why is that the response comes fast but displaying the address takes too long time 
 
-when user responds with Yes i want the send solana function to go off finish this 
+at phase 4 after payment is complete it says 
+Processing transaction... but for too long why is that 
+ 
+
+
+
+this is how the conversation went 
+
+I am Lucy, a specialized AI agent focused on creating smart contracts on the Solana network, with an emphasis on DAO-related contracts. How can I assist you further with your smart contract needs?
+
+
+make me a DAO for voting
+
+
+Phase 1: To create a DAO for voting on Solana, I need to understand more about your requirements. What specific voting mechanisms are you looking to implement? Are there any particular features or governance structures you want to include?
+
+
+no just normal voting 
+
+
+Phase 2: To proceed with creating a DAO for normal voting on Solana, I need more details. How should the voting process work? For example, do you want a simple majority to pass a vote, or should there be a specific threshold? Also, are there any additional features you'd like to include, such as proposal submission or time limits for voting?
+
+
+simple majority to pass a vote and no threshold 
+
+
+Phase 2: To proceed with creating a DAO for normal voting on Solana with a simple majority to pass a vote and no specific threshold, I need more details. Are there any additional features you'd like to include, such as proposal submission or time limits for voting?
+
+
+no proposal submission and time limit is 1day
+
+
+Phase 3: Here is the Solana Rust contract code for your DAO with normal voting, a simple majority to pass a vote, and a 1-day voting limit:
+
+rust
+use solana_program::{
+    account_info::{next_account_info, AccountInfo},
+    entrypoint::ProgramResult,
+    program_error::ProgramError,
+    pubkey::Pubkey,
+};
+
+solana_program::entrypoint!(process_instruction);
+
+fn process_instruction(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    instruction_data: &[u8],
+) -> ProgramResult {
+    let accounts_iter = &mut accounts.iter();
+    let dao_account = next_account_info(accounts_iter)?;
+    let voter_account = next_account_info(accounts_iter)?;
+
+    if !voter_account.is_signer {
+        return Err(ProgramError::MissingRequiredSignature);
+}
+
+    if dao_account.owner != program_id {
+        return Err(ProgramError::IncorrectProgramId);
+    }
+
+    let mut dao_data = dao_account.try_borrow_mut_data()?;
+    let mut votes = 0;
+    let mut total_voters = 0;
+
+    // Deserialize votes and total voters
+    votes = u64::from_le_bytes(dao_data[0..8].try_into().unwrap());
+    total_voters = u64::from_le_bytes(dao_data[8..16].try_into().unwrap());
+
+    // Increment vote if not already voted
+    if !dao_data[16 + (voter_account.key.to_bytes()[0] as usize) / 8] & (1 << (voter_account.key.to_bytes()[0] as usize % 8)) != 0 {
+        votes += 1;
+        dao_data[16 + (voter_account.key.to_bytes()[0] as usize) / 8] |= 1 << (voter_account.key.to_bytes()[0] as usize % 8);
+    }
+
+    // Update votes
+    dao_data[0..8].copy_from_slice(&votes.to_le_bytes());
+
+    // Check if voting period has ended
+    let current_time = solana_program::clock::Clock::get()?.unix_timestamp;
+    let voting_end_time = i64::from_le_bytes(dao_data[24..32].try_into().unwrap());
+
+    if current_time > voting_end_time {
+        if votes > total_voters / 2 {
+            // Proposal passed
+            dao_data[32] = 1; // Set result to passed
+        } else {
+            // Proposal failed
+            dao_data[32] = 0; // Set result to failed
+        }
+    }
+
+    Ok(())
+}
+end contract
+
+Would you like to proceed with the deployment of this contract?
+
+
+Deploy
+
+
+Phase 4: The contract has been successfully deployed. The deployed smart contract can be registered on the Lucy web for ongoing management. Would you like to proceed with management registration? (Yes or No)
+
+
+Contract deployed successfully! Address: B9ikFyh9XoGLzeDr6tAz1hX68CkrRwJrRXLqSZvGi6z9
+
+
+Yes
+
+
+Transaction completed successfully! Your contract has been registered for management. Transaction signature: DiJTkz4Pc3JPRAQo83hnQXiK6jytjZJpRN9E8tFqDXSyzVM7LuXjvE9FZ1c4QbH8E1Fi5JFcHp9pdCiwMXEL8ef
+
+
+Phase 4: Thank you for confirming. The smart contract has been registered on the Lucy web for ongoing management. Is there anything else you need assistance with?
+
+
+Processing transaction...
+
+
+

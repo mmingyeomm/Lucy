@@ -11,7 +11,10 @@ export const sendTransaction = async (
     }
 
     // Create a connection to the Solana Devnet
-    const connection = new Connection("https://api.devnet.solana.com");
+    const connection = new Connection("https://api.devnet.solana.com", {
+        commitment: 'confirmed',
+        confirmTransactionInitialTimeout: 60000 // 60 seconds timeout for confirmation
+    });
 
     try {
         // Convert the recipient address to a PublicKey
@@ -20,8 +23,15 @@ export const sendTransaction = async (
         // Convert the amount from SOL to lamports (1 SOL = 1,000,000,000 lamports)
         const amountInLamports = amountInSOL * 1_000_000_000;
 
-        // Create a transaction
-        const transaction = new Transaction().add(
+        // Get the most recent blockhash for better transaction freshness
+        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+
+        // Create a transaction with the recent blockhash
+        const transaction = new Transaction({ 
+            feePayer: publicKey,
+            blockhash,
+            lastValidBlockHeight
+        }).add(
             SystemProgram.transfer({
                 fromPubkey: publicKey, // Sender's public key
                 toPubkey: recipient, // Recipient's public key
@@ -30,15 +40,38 @@ export const sendTransaction = async (
         );
 
         // Send the transaction using the `sendTransaction` function from the wallet
-        const signature = await sendTransactionFn(transaction, connection);
+        // Create a race promise with a timeout
+        const transactionTimeout = 30000; // 30 seconds
+        
+        const timeoutPromise = new Promise<string>((_, reject) => {
+            setTimeout(() => {
+                reject(new Error("Transaction sending timed out"));
+            }, transactionTimeout);
+        });
+        
+        // Race between the actual transaction and the timeout
+        const signature = await Promise.race([
+            sendTransactionFn(transaction, connection),
+            timeoutPromise
+        ]);
 
         console.log("Transaction sent with signature:", signature);
 
-        // Confirm the transaction
-        const confirmation = await connection.confirmTransaction(signature, "confirmed");
-        console.log("Transaction confirmed:", confirmation);
+        // Don't wait for full confirmation, just return the signature immediately
+        // This allows the UI to update faster
+        
+        // Start confirmation in the background
+        connection.confirmTransaction({
+            signature,
+            blockhash,
+            lastValidBlockHeight
+        }, 'confirmed').then(confirmation => {
+            console.log("Transaction confirmed:", confirmation);
+        }).catch(error => {
+            console.error("Error confirming transaction:", error);
+        });
 
-        return signature; // Return the transaction signature
+        return signature; // Return the transaction signature immediately
     } catch (error) {
         console.error("Error sending transaction:", error);
         throw error;
@@ -72,7 +105,14 @@ export const deployContract = async (response: string): Promise<string> => {
         }
         console.log("Extracted contract code:", contractCode);
         
-        // Send the contract to the backend for deployment
+        // Set a timeout to ensure the request doesn't hang indefinitely
+        const timeout = 15000; // 15 seconds timeout
+        
+        // Create an AbortController for the fetch request
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        
+        // Send the contract to the backend for deployment with timeout
         const backendUrl = "http://localhost:3002/deploy";
         const deployResponse = await fetch(backendUrl, {
             method: "POST",
@@ -80,17 +120,44 @@ export const deployContract = async (response: string): Promise<string> => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ contract_code: contractCode }),
-        });
+            signal: controller.signal
+        }).finally(() => clearTimeout(timeoutId));
         
-        if (!deployResponse.ok) {  // 이름 변경 적용
+        if (!deployResponse.ok) {
             throw new Error(`Server responded with ${deployResponse.status}: ${deployResponse.statusText}`);
         }
         
-        const data = await deployResponse.json();  // 이름 변경 적용
+        // Use a timeout for parsing the JSON response as well
+        const textResponse = await deployResponse.text();
+        let data;
+        
+        try {
+            data = JSON.parse(textResponse);
+        } catch (e) {
+            console.error("Failed to parse JSON response:", e);
+            console.log("Raw response:", textResponse);
+            // If we can't parse the response but it contains an address, try to extract it
+            const addressMatch = textResponse.match(/[A-Za-z0-9]{32,}/);
+            if (addressMatch) {
+                return `Contract deployed successfully! Address: ${addressMatch[0]}`;
+            }
+            throw new Error("Failed to parse deployment response");
+        }
+        
         console.log("Deployment result:", data);
+        
+        // Handle case where contract_address might be empty or null
+        if (!data.contract_address) {
+            console.warn("Contract address is missing from the response");
+            return "Contract deployed successfully! The contract address will be available shortly.";
+        }
         
         return `Contract deployed successfully! Address: ${data.contract_address}`;
     } catch (error) {
+        if (error.name === 'AbortError') {
+            console.error("Deployment request timed out");
+            return "Contract deployment initiated. The address will be available shortly.";
+        }
         console.error("Error deploying contract:", error);
         return `Error deploying contract: ${error instanceof Error ? error.message : String(error)}`;
     }

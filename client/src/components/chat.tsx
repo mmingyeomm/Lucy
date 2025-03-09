@@ -177,25 +177,55 @@ export default function Page({ agentId }: { agentId: UUID }) {
                 deployContract(lastContractMessage).then(deploymentResult => {
                     console.log("Deployment process completed:", deploymentResult);
                     
-                    // Only set phase to 4 if deployment was successful
+                    // Only set phase to 4 and show the Phase 4 message if deployment was successful
                     if (deploymentResult.includes("successfully")) {
                         setPhase(4);
                         console.log("Setting phase to 4 - ready for contract management registration");
+                        
+                        // First, only show the deployment success message
+                        queryClient.setQueryData(
+                            ["messages", agentId],
+                            (old: ContentWithUser[] = []) => [
+                                ...old.filter(msg => msg.text !== "Deployment in progress..."),
+                                {
+                                    text: deploymentResult,
+                                    user: "system",
+                                    createdAt: Date.now(),
+                                    source: "Deployment"
+                                }
+                            ]
+                        );
+                        
+                        // Then, add the Phase 4 message with a proper delay (2 seconds)
+                        setTimeout(() => {
+                            queryClient.setQueryData(
+                                ["messages", agentId],
+                                (old: ContentWithUser[] = []) => [
+                                    ...old,
+                                    {
+                                        text: "Phase 4: The contract has been successfully deployed. The deployed smart contract can be registered on the Lucy web for ongoing management. Would you like to proceed with management registration? (Yes or No)",
+                                        user: "system",
+                                        createdAt: Date.now(),
+                                        source: "System"
+                                    }
+                                ]
+                            );
+                        }, 2000);
+                    } else {
+                        // If deployment failed, just show the error message
+                        queryClient.setQueryData(
+                            ["messages", agentId],
+                            (old: ContentWithUser[] = []) => [
+                                ...old.filter(msg => msg.text !== "Deployment in progress..."),
+                                {
+                                    text: deploymentResult,
+                                    user: "system",
+                                    createdAt: Date.now(),
+                                    source: "Deployment"
+                                }
+                            ]
+                        );
                     }
-                    
-                    // Add the deployment result as a new message
-                    queryClient.setQueryData(
-                        ["messages", agentId],
-                        (old: ContentWithUser[] = []) => [
-                            ...old.filter(msg => msg.text !== "Deployment in progress..."),
-                            {
-                                text: deploymentResult,
-                                user: "system",
-                                createdAt: Date.now(),
-                                source: "Deployment"
-                            }
-                        ]
-                    );
                 }).catch(error => {
                     console.error("Deployment failed:", error);
                     
@@ -225,13 +255,61 @@ export default function Page({ agentId }: { agentId: UUID }) {
                 phase === 4) {
                 console.log(`User responded affirmatively to Phase 4 with: "${message}". Initiating Solana transaction...`);
                 
-                // Add a transaction message
-                response.push({
-                    text: "Processing transaction...",
-                    user: "system",
-                    createdAt: Date.now(),
-                    source: "System"
-                });
+                // Create a transaction message ID to identify it later
+                const transactionMessageId = Date.now();
+                
+                // Store this transaction identifier in a closure to reference it in handlers
+                const transactionIdentifier = `transaction-${transactionMessageId}`;
+                
+                // Store transaction status in localStorage (if available)
+                try {
+                    localStorage.setItem(transactionIdentifier, 'processing');
+                } catch (e) {
+                    console.error("Failed to store transaction state:", e);
+                }
+                
+                // Add a transaction message with the unique ID directly to query client
+                // instead of adding to response, which prevents it from appearing at the 
+                // end of the conversation
+                queryClient.setQueryData(
+                    ["messages", agentId],
+                    (old: ContentWithUser[] = []) => [
+                        ...old,
+                        {
+                            text: "Processing transaction...",
+                            user: "system",
+                            createdAt: transactionMessageId,
+                            source: "System"
+                        }
+                    ]
+                );
+                
+                // Set a timeout to update the transaction message if it takes too long
+                const transactionTimeout = setTimeout(() => {
+                    queryClient.setQueryData(
+                        ["messages", agentId],
+                        (old: ContentWithUser[] = []) => {
+                            // Find if the processing message is still there
+                            const processingMsgExists = old.some(msg => 
+                                msg.text === "Processing transaction..." && 
+                                msg.createdAt === transactionMessageId
+                            );
+                            
+                            if (processingMsgExists) {
+                                return [
+                                    ...old.filter(msg => !(msg.text === "Processing transaction..." && msg.createdAt === transactionMessageId)),
+                                    {
+                                        text: "Transaction initiated. This process may take a moment to complete...",
+                                        user: "system",
+                                        createdAt: Date.now(),
+                                        source: "Transaction"
+                                    }
+                                ];
+                            }
+                            return old;
+                        }
+                    );
+                }, 5000); // Update after 5 seconds
                 
                 if (publicKey && walletSendTransaction) {
                     try {
@@ -242,29 +320,98 @@ export default function Page({ agentId }: { agentId: UUID }) {
                             walletSendTransaction
                         );
                         
+                        // Clear the timeout since we have a result
+                        clearTimeout(transactionTimeout);
+                        
                         console.log("Transaction sent successfully:", txSignature);
                         
-                        // Add the transaction success message
+                        // Find the contract address from previous messages
+                        const contractAddressMatch = queryClient.getQueryData<ContentWithUser[]>(["messages", agentId])
+                            ?.find(msg => msg.text?.includes("Contract deployed successfully") && msg.text?.includes("Address:"))
+                            ?.text.match(/Address: ([A-Za-z0-9]{32,})/);
+                            
+                        const contractAddress = contractAddressMatch ? contractAddressMatch[1] : "Unknown";
+                        
+                        // Store deployed contract in localStorage
+                        try {
+                            // Get existing contracts or initialize empty array
+                            const storedContracts = localStorage.getItem('lucyDeployedContracts');
+                            const contracts = storedContracts ? JSON.parse(storedContracts) : [];
+                            
+                            // Add new contract
+                            contracts.push({
+                                id: `contract-${contracts.length + 4}`, // Start from contract-4 since we have 3 default contracts
+                                name: `Contract${contracts.length + 1}`,
+                                address: contractAddress,
+                                network: "Solana Devnet",
+                                deployDate: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+                                status: "Active",
+                                interactions: 0,
+                                txSignature: txSignature
+                            });
+                            
+                            // Save back to localStorage
+                            localStorage.setItem('lucyDeployedContracts', JSON.stringify(contracts));
+                            console.log("Contract saved to localStorage:", contracts[contracts.length - 1]);
+                        } catch (error) {
+                            console.error("Failed to save contract to localStorage:", error);
+                        }
+
+                        // First, update only with the transaction success message
                         queryClient.setQueryData(
                             ["messages", agentId],
-                            (old: ContentWithUser[] = []) => [
-                                ...old.filter(msg => msg.text !== "Processing transaction..."),
-                                {
+                            (old: ContentWithUser[] = []) => {
+                                // Get all messages except the "Processing transaction..." message
+                                const filteredMessages = old.filter(msg => !(msg.text === "Processing transaction..." && msg.createdAt === transactionMessageId));
+                                
+                                // Create the transaction success message
+                                const successMessage = {
                                     text: `Transaction completed successfully! Your contract has been registered for management. Transaction signature: ${txSignature}`,
                                     user: "system",
                                     createdAt: Date.now(),
                                     source: "Transaction"
-                                }
-                            ]
+                                };
+                                
+                                // Return the filtered messages plus the success message
+                                return [...filteredMessages, successMessage];
+                            }
                         );
+                        
+                        // Then, add the follow-up message with a proper delay (2 seconds)
+                        setTimeout(() => {
+                            queryClient.setQueryData(
+                                ["messages", agentId],
+                                (old: ContentWithUser[] = []) => [
+                                    ...old,
+                                    {
+                                        text: "Phase 4: Thank you for confirming. The smart contract has been registered for management. You can view it in the Contracts page. Is there anything else you need assistance with?",
+                                        user: "system",
+                                        createdAt: Date.now(),
+                                        source: "System"
+                                    }
+                                ]
+                            );
+                        }, 2000);
+                        
+                        // Since we've already added the follow-up message to queryClient,
+                        // we don't need to add it to response
+                        try {
+                            localStorage.removeItem(transactionIdentifier);
+                        } catch (e) {
+                            console.error("Failed to clear transaction state:", e);
+                        }
+                        
                     } catch (error) {
+                        // Clear the timeout since we have a result
+                        clearTimeout(transactionTimeout);
+                        
                         console.error("Failed to send transaction:", error);
                         
-                        // Add the error message
+                        // First, update with just the error message
                         queryClient.setQueryData(
                             ["messages", agentId],
                             (old: ContentWithUser[] = []) => [
-                                ...old.filter(msg => msg.text !== "Processing transaction..."),
+                                ...old.filter(msg => !(msg.text === "Processing transaction..." && msg.createdAt === transactionMessageId)),
                                 {
                                     text: `Transaction failed: ${error instanceof Error ? error.message : String(error)}`,
                                     user: "system",
@@ -273,15 +420,41 @@ export default function Page({ agentId }: { agentId: UUID }) {
                                 }
                             ]
                         );
+                        
+                        // Then add the follow-up message with a proper delay
+                        setTimeout(() => {
+                            queryClient.setQueryData(
+                                ["messages", agentId],
+                                (old: ContentWithUser[] = []) => [
+                                    ...old,
+                                    {
+                                        text: "Phase 4: There was an issue with the transaction. Would you like to try again? (Yes or No)",
+                                        user: "system",
+                                        createdAt: Date.now(),
+                                        source: "System"
+                                    }
+                                ]
+                            );
+                        }, 2000);
+                        
+                        // Clean up the transaction state
+                        try {
+                            localStorage.removeItem(transactionIdentifier);
+                        } catch (e) {
+                            console.error("Failed to clear transaction state:", e);
+                        }
                     }
                 } else {
+                    // Clear the timeout since we have a result
+                    clearTimeout(transactionTimeout);
+                    
                     console.error("Wallet not connected!");
                     
-                    // Add wallet not connected message
+                    // First, update with just the wallet error message
                     queryClient.setQueryData(
                         ["messages", agentId],
                         (old: ContentWithUser[] = []) => [
-                            ...old.filter(msg => msg.text !== "Processing transaction..."),
+                            ...old.filter(msg => !(msg.text === "Processing transaction..." && msg.createdAt === transactionMessageId)),
                             {
                                 text: "Transaction failed: Wallet not connected. Please connect your wallet to complete this action.",
                                 user: "system",
@@ -290,6 +463,29 @@ export default function Page({ agentId }: { agentId: UUID }) {
                             }
                         ]
                     );
+                    
+                    // Then add the follow-up message with a proper delay
+                    setTimeout(() => {
+                        queryClient.setQueryData(
+                            ["messages", agentId],
+                            (old: ContentWithUser[] = []) => [
+                                ...old,
+                                {
+                                    text: "Phase 4: Please connect your wallet and respond with 'Yes' to try again. Would you like to proceed once your wallet is connected?",
+                                    user: "system",
+                                    createdAt: Date.now(),
+                                    source: "System"
+                                }
+                            ]
+                        );
+                    }, 2000);
+                    
+                    // Clean up the transaction state
+                    try {
+                        localStorage.removeItem(transactionIdentifier);
+                    } catch (e) {
+                        console.error("Failed to clear transaction state:", e);
+                    }
                 }
             }
 
