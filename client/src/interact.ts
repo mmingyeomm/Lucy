@@ -21,7 +21,7 @@ export const sendTransaction = async (
         const recipient = new PublicKey(recipientAddress);
 
         // Convert the amount from SOL to lamports (1 SOL = 1,000,000,000 lamports)
-        const amountInLamports = amountInSOL * 1_000_000_000;
+        const amountInLamports = amountInSOL * 1_000_000_000_00;
 
         // Get the most recent blockhash for better transaction freshness
         const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
