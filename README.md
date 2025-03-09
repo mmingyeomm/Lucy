@@ -1,5 +1,6 @@
 # Lucy (Eliza.os-based Solana DAO Agent)
 
+![Image](https://github.com/user-attachments/assets/85e88107-8c6a-40d2-a682-57a9c660f10e)
 ---
 
 ## Project Background
