@@ -96,3 +96,8 @@ Through these steps, Lucy allows even blockchain beginners to build and manage a
   - *Telegram*: `@kkKuhn`
 
 Both members have experience in **Solana smart contract** implementation and **AI-driven process design**, aiming to balance **technical expertise** with **user experience**. In particular, Lucy’s **4-phase structure** organizes the DAO creation workflow to meticulously reflect **step-by-step requirements** and ensure **stable deployments**. This approach will enable anyone in the Solana ecosystem who needs a DAO to easily and securely implement **decentralized governance**.
+
+---
+
+## Lucy is always by your side.
+![Image](https://github.com/user-attachments/assets/a835e803-9c13-4112-8827-fc975ce5d37f)
