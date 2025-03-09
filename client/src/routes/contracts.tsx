@@ -4,10 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { motion } from "framer-motion";
 import { Code, Database, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ContractViewer from "@/components/contract-viewer";
 
 export default function ContractsRoute() {
     const [loading, setLoading] = useState(true);
     const [contracts, setContracts] = useState<any[]>([]);
+    const [viewerOpen, setViewerOpen] = useState(false);
+    const [selectedContract, setSelectedContract] = useState<any>(null);
 
     // Load contract data from localStorage and combine with default contracts
     useEffect(() => {
@@ -112,6 +115,11 @@ export default function ContractsRoute() {
         }, 1000);
     };
 
+    const handleViewDetails = (contract: any) => {
+        setSelectedContract(contract);
+        setViewerOpen(true);
+    };
+
     return (
         <div className="relative flex flex-col h-screen">
             <NavigationBar />
@@ -204,6 +212,7 @@ export default function ContractsRoute() {
                                                     <Button 
                                                         variant="outline" 
                                                         className="w-full text-xs h-8 bg-primary/5 hover:bg-primary/10 border-primary/10 group-hover:border-primary/20"
+                                                        onClick={() => handleViewDetails(contract)}
                                                     >
                                                         View Details
                                                     </Button>
@@ -235,6 +244,13 @@ export default function ContractsRoute() {
                     )}
                 </div>
             </div>
+
+            {/* Contract Viewer Popup */}
+            <ContractViewer 
+                open={viewerOpen} 
+                onOpenChange={setViewerOpen} 
+                contract={selectedContract} 
+            />
         </div>
     );
 }
