@@ -99,5 +99,5 @@ Both members have experience in **Solana smart contract** implementation and **A
 
 ---
 
-## Lucy is always by your side.
+## Lucy always by your side.
 ![Image](https://github.com/user-attachments/assets/a835e803-9c13-4112-8827-fc975ce5d37f)
