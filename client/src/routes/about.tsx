@@ -33,7 +33,7 @@ export default function AboutRoute() {
                         
                         <h1 className="text-4xl font-bold mb-4">LUCY DAO</h1>
                         <p className="text-xl text-primary/70 max-w-2xl mx-auto">
-                            An advanced AI companion and decentralized autonomous organization for the next generation of digital interactions
+                            Lucy is an AI-driven agent that streamlines the entire process of creating and deploying DAO smart contracts on the Solana blockchain through natural language commands.
                         </p>
                     </motion.div>
                     
@@ -47,16 +47,16 @@ export default function AboutRoute() {
                         <div className="p-6 bg-primary/5 rounded-xl border border-primary/10 mb-6">
                             <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
                             <p className="text-lg leading-relaxed">
-                                LUCY DAO is built to bridge human creativity with AI capabilities through a decentralized framework that ensures privacy, transparency, and collective governance. We're creating a future where AI assistance is both powerful and accountable.
+                                Lucy aim to democratize on-chain governance by empowering anyone—regardless of technical background—to build, launch, and manage decentralized organizations on Solana. By merging AI-based code generation with secure deployment workflows, Lucy reduces development barriers and accelerates community-driven innovation in the Web3 space.
                             </p>
                         </div>
                         
                         <div className="flex flex-wrap justify-center gap-4">
-                            <Button variant="outline" className="gap-2">
+                            <Button variant="outline" className="gap-2" onClick={() => window.open('https://github.com/mmingyeomm/Lucy')}>
                                 <Github className="h-4 w-4" />
                                 View on GitHub
                             </Button>
-                            <Button className="gap-2">
+                            <Button className="gap-2" onClick={() => window.open('https://t.me/+iAps93_b4485YmM1')} >
                                 <Users className="h-4 w-4" />
                                 Join Community
                             </Button>
@@ -76,37 +76,37 @@ export default function AboutRoute() {
                             <FeatureCard 
                                 icon={<Brain className="h-8 w-8 text-primary" />}
                                 title="Neural Intelligence"
-                                description="Powered by advanced language models and custom-trained systems for human-like interactions and problem-solving."
+                                description="Utilizes LLMs to interpret user requests and generate production-ready smart contract code"
                             />
                             
                             <FeatureCard 
                                 icon={<TerminalSquare className="h-8 w-8 text-primary" />}
                                 title="Developer Tools"
-                                description="Built-in coding assistance, documentation generation, and error debugging to boost developer productivity."
+                                description="Offers an ecosystem of tooling for testing, debugging, and deploying DAO contracts—streamlining the Solana development experience"
                             />
                             
                             <FeatureCard 
                                 icon={<Zap className="h-8 w-8 text-primary" />}
                                 title="Smart Contract Integration"
-                                description="Seamlessly interact with blockchain networks through natural language commands and automated workflows."
+                                description="Connects seamlessly with existing Solana programs, ensuring DAOs can leverage robust token standards, treasury modules, and upgradeable governance structures"
                             />
                             
                             <FeatureCard 
                                 icon={<Globe className="h-8 w-8 text-primary" />}
                                 title="Decentralized Architecture"
-                                description="Running on a distributed network ensuring uptime, censorship resistance, and collective ownership."
+                                description="Prioritizes on-chain interactions and trustless execution, fostering transparent and community-centric decision-making"
                             />
                             
                             <FeatureCard 
                                 icon={<Shield className="h-8 w-8 text-primary" />}
                                 title="Privacy-Preserving"
-                                description="End-to-end encryption and private computation guaranteeing your data remains yours alone."
+                                description="Employs secure coding practices and optional encryption layers, allowing DAOs to safeguard sensitive information within their governance processes"
                             />
                             
                             <FeatureCard 
                                 icon={<Users className="h-8 w-8 text-primary" />}
                                 title="Community Governed"
-                                description="Democratic decision-making through DAO mechanisms where every member has a voice in LUCY's evolution."
+                                description="Encourages collaborative input and oversight, ensuring that feature developments, governance rules, and protocol upgrades reflect the collective will of DAO participants"
                             />
                         </div>
                     </motion.div>
@@ -122,23 +122,30 @@ export default function AboutRoute() {
                         
                         <div className="p-6 bg-primary/5 rounded-xl border border-primary/10">
                             <div className="mb-6">
-                                <h3 className="text-lg font-medium mb-2">Neural Core</h3>
+                                <h3 className="text-lg font-medium mb-2">AI Code Generation</h3>
                                 <p className="text-primary/70">
-                                    The central processing system leveraging transformer architecture with custom attention mechanisms optimized for context-aware responses and long-term memory retention.
+                                    Lucy translates plain-English (or other language) prompts into Rust smart contracts using a specialized language model, incorporating governance templates and best practices to reduce vulnerabilities.
                                 </p>
                             </div>
                             
                             <div className="mb-6">
-                                <h3 className="text-lg font-medium mb-2">Blockchain Integration</h3>
+                                <h3 className="text-lg font-medium mb-2">Automated Deployment</h3>
                                 <p className="text-primary/70">
-                                    Built on Solana for high throughput and minimal transaction costs, with cross-chain bridges to Ethereum and other networks for maximum interoperability.
+                                    Once the code is generated, it is compiled and tested on Solana's devnet or testnet before being deployed to mainnet. A one-click deploy mechanism handles environment configurations to ensure a smooth, error-free launch.
+                                </p>
+                            </div>
+                            
+                            <div className="mb-6">
+                                <h3 className="text-lg font-medium mb-2">DAO Management Layer</h3>
+                                <p className="text-primary/70">
+                                    After successful deployment, Lucy can register the DAO for continuous oversight—enabling proposals, voting, treasury actions, and more. A user-friendly dashboard or Lucy's chat interface makes it easy to manage upgrades, token distribution, and ongoing governance adjustments.
                                 </p>
                             </div>
                             
                             <div>
-                                <h3 className="text-lg font-medium mb-2">Governance Structure</h3>
+                                <h3 className="text-lg font-medium mb-2">Modular Upgradability</h3>
                                 <p className="text-primary/70">
-                                    Multi-tiered voting system with weighted delegation and proposal vetting to ensure democratic yet efficient decision-making across the LUCY ecosystem.
+                                    DAOs built with Lucy can adapt to evolving needs by integrating new governance modules or features without requiring a complete rebuild. This modular approach supports incremental improvements and fosters long-term sustainability for decentralized organizations on Solana.  
                                 </p>
                             </div>
                         </div>

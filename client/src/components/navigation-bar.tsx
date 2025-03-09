@@ -152,16 +152,7 @@ export function NavigationBar() {
                     <span className="font-mono text-xs uppercase">About Lucy</span>
                 </NavLink>
                 
-                {/* External Docs Link */}
-                <NavLink
-                    to="https://elizaos.github.io/eliza/docs/intro/"
-                    target="_blank"
-                    className="flex items-center gap-2 px-3 py-1 rounded-md hover:bg-primary/10 transition-colors"
-                >
-                    <FileCode className="size-4 text-primary" />
-                    <span className="font-mono text-xs uppercase">API Docs</span>
-                </NavLink>
-                
+
                 {/* Connection Status */}
                 <ConnectionStatus />
             </div>
