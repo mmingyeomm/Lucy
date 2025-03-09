@@ -50,16 +50,26 @@ export const deployContract = async (response: string): Promise<string> => {
     try {
         console.log("Processing response for contract deployment...");
 
-        // Extract the contract code between "rust" and "end contract"
+        // Check if response starts with "Phase 3:" and contains code
+        let contractCode;
+        
+        // Try to extract code between "rust" and "end contract" markers
         const rustRegex = /rust\n([\s\S]*?)end contract/;
         const match = response.match(rustRegex);
         
-        if (!match || !match[1]) {
+        if (match && match[1]) {
+            // Original format found
+            contractCode = match[1].trim();
+        } else {
             console.error("No valid contract found in the response");
             return "Error: No valid contract code found";
         }
         
-        const contractCode = match[1].trim();
+        // Verify we have code
+        if (!contractCode) {
+            console.error("No valid contract found in the response");
+            return "Error: No valid contract code found";
+        }
         console.log("Extracted contract code:", contractCode);
         
         // Send the contract to the backend for deployment

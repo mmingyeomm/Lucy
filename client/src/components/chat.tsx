@@ -46,7 +46,8 @@ export default function Page({ agentId }: { agentId: UUID }) {
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
-    // const { publicKey, sendTransaction: walletSendTransaction } = useWallet();
+
+    const { publicKey, sendTransaction: walletSendTransaction } = useWallet();
     const queryClient = useQueryClient();
 
 
@@ -123,6 +124,10 @@ export default function Page({ agentId }: { agentId: UUID }) {
         }
     }, []);
 
+    // Store last Lucy message that contains a smart contract
+    const [lastContractMessage, setLastContractMessage] = useState<string | null>(null);
+    const [phase, setPhase] = useState<number | null>(null); 
+    
     const sendMessageMutation = useMutation({
         mutationKey: ["send_message", agentId],
         mutationFn: async ({
@@ -139,10 +144,27 @@ export default function Page({ agentId }: { agentId: UUID }) {
             console.log(response[0].text);
 
             const responseText = response[0].text;
+            // Check if Lucy's message starts with specific phase indicators
             const firstTwoWords = responseText.trim().split(/\s+/).slice(0, 2).join(" ");
-            if (firstTwoWords === "Phase 3:") {
-                console.log("Detected Phase 3 response, initiating contract deployment...");
-
+            
+            // If Lucy's response starts with "Phase 3:" and contains rust code, save it
+            if (firstTwoWords === "Phase 3:" && responseText.includes("rust") && responseText.includes("end contract")) {
+                console.log("Storing Lucy's contract message for future deployment");
+                setLastContractMessage(responseText);
+            }
+            
+            // If Lucy's response indicates Phase 4 completion (smart contract deployment)
+            if (firstTwoWords === "Phase 4:" || responseText.includes("has been successfully deployed") || 
+                (responseText.includes("Would you like to proceed with management registration?") && 
+                responseText.includes("Yes or No"))) {
+                console.log("Detected Phase 4 message about contract registration");
+                setPhase(4);
+            }
+            
+            // If user's message starts with "Deploy" and we have a stored contract message
+            if (message.toLowerCase().startsWith("deploy") && lastContractMessage) {
+                console.log("Detected Deploy request with previously stored contract, initiating deployment...");
+                
                 // Add a deployment message
                 response.push({
                     text: "Deployment in progress...",
@@ -151,9 +173,15 @@ export default function Page({ agentId }: { agentId: UUID }) {
                     source: "System"
                 });
 
-                // Start the deployment process
-                deployContract(responseText).then(deploymentResult => {
+                // Start the deployment process with the stored contract message
+                deployContract(lastContractMessage).then(deploymentResult => {
                     console.log("Deployment process completed:", deploymentResult);
+                    
+                    // Only set phase to 4 if deployment was successful
+                    if (deploymentResult.includes("successfully")) {
+                        setPhase(4);
+                        console.log("Setting phase to 4 - ready for contract management registration");
+                    }
                     
                     // Add the deployment result as a new message
                     queryClient.setQueryData(
@@ -188,22 +216,84 @@ export default function Page({ agentId }: { agentId: UUID }) {
             }
 
 
-            // Send the Solana transaction
-            // if (publicKey && walletSendTransaction) {
-            //     try {
-            //         await sendTransaction(
-            //             "5KnRkA6WaZu3SZKGsY7KhkBw8gNoKQeD7nV3vfanGP1e", // Recipient address
-            //             0.001, // Amount in SOL
-            //             publicKey,
-            //             walletSendTransaction
-            //         );
-            //         console.log("Transaction sent successfully!");
-            //     } catch (error) {
-            //         console.error("Failed to send transaction:", error);
-            //     }
-            // } else {
-            //     console.error("Wallet not connected!");
-            // }
+            // Check for any variation of "yes" response when we're in phase 4
+            if ((message.toLowerCase().includes("yes") || 
+                 message.toLowerCase() === "y" || 
+                 message.toLowerCase() === "yeah" || 
+                 message.toLowerCase() === "yep" || 
+                 message.toLowerCase() === "sure") && 
+                phase === 4) {
+                console.log(`User responded affirmatively to Phase 4 with: "${message}". Initiating Solana transaction...`);
+                
+                // Add a transaction message
+                response.push({
+                    text: "Processing transaction...",
+                    user: "system",
+                    createdAt: Date.now(),
+                    source: "System"
+                });
+                
+                if (publicKey && walletSendTransaction) {
+                    try {
+                        const txSignature = await sendTransaction(
+                            "73yff1Z1Q2UQo9S5cNmPEuUATRvsgiJiQJo3kCVDrhhK", // Recipient address
+                            0.001, // Amount in SOL
+                            publicKey,
+                            walletSendTransaction
+                        );
+                        
+                        console.log("Transaction sent successfully:", txSignature);
+                        
+                        // Add the transaction success message
+                        queryClient.setQueryData(
+                            ["messages", agentId],
+                            (old: ContentWithUser[] = []) => [
+                                ...old.filter(msg => msg.text !== "Processing transaction..."),
+                                {
+                                    text: `Transaction completed successfully! Your contract has been registered for management. Transaction signature: ${txSignature}`,
+                                    user: "system",
+                                    createdAt: Date.now(),
+                                    source: "Transaction"
+                                }
+                            ]
+                        );
+                    } catch (error) {
+                        console.error("Failed to send transaction:", error);
+                        
+                        // Add the error message
+                        queryClient.setQueryData(
+                            ["messages", agentId],
+                            (old: ContentWithUser[] = []) => [
+                                ...old.filter(msg => msg.text !== "Processing transaction..."),
+                                {
+                                    text: `Transaction failed: ${error instanceof Error ? error.message : String(error)}`,
+                                    user: "system",
+                                    createdAt: Date.now(),
+                                    source: "Transaction"
+                                }
+                            ]
+                        );
+                    }
+                } else {
+                    console.error("Wallet not connected!");
+                    
+                    // Add wallet not connected message
+                    queryClient.setQueryData(
+                        ["messages", agentId],
+                        (old: ContentWithUser[] = []) => [
+                            ...old.filter(msg => msg.text !== "Processing transaction..."),
+                            {
+                                text: "Transaction failed: Wallet not connected. Please connect your wallet to complete this action.",
+                                user: "system",
+                                createdAt: Date.now(),
+                                source: "Transaction"
+                            }
+                        ]
+                    );
+                }
+            }
+
+
 
             return response;
         },
