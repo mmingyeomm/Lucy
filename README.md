@@ -97,44 +97,114 @@ Lucy directly tackles these issues with an **end-to-end AI-driven workflow**:
 
 ---
 
-## Architecture & Design
+## Budget & Milestones
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Lucy (AI Agent)
-    participant Code Generator
-    participant Solana Devnet/Mainnet
-    participant Web Portal (Optional)
+### Deliverables
 
-    rect rgba(240, 240, 240, 0.5)
-    Note right of User: High-level DAO request
-    end
-    
-    User->>Lucy (AI Agent): "Create a DAO voting contract"
-    Lucy (AI Agent)->>Code Generator: Parses user prompt, requests Rust/Anchor code
-    Code Generator-->>Lucy (AI Agent): Returns generated DAO contract code
+1. **MVP Release**
+   - Lucy integrated with Solana devnet for contract generation and deployment.  
+   - Basic DAO templates (voting, membership tokens).  
+   - CLI or chat-based interface for user interactions.
 
-    rect rgba(240, 240, 240, 0.5)
-    Note right of Lucy (AI Agent): Automated testing & verification
-    end
-    
-    Lucy (AI Agent)->>Solana Devnet/Mainnet: Deploy test instance (devnet)
-    Solana Devnet/Mainnet-->>Lucy (AI Agent): Deployment & test transaction results
+2. **Beta Release & Website Integration**
+   - Code storage feature on the website.  
+   - Enhanced UI for DAO interactions (proposals, voting, distribution).  
+   - Documentation & Tutorials.
 
-    rect rgba(240, 240, 240, 0.5)
-    Note right of User: Final deployment confirmation
-    end
-    
-    Lucy (AI Agent)-->>User: Presents test results, requests user confirmation
-    User->>Lucy (AI Agent): "Yes, deploy to mainnet"
-    Lucy (AI Agent)->>Solana Devnet/Mainnet: Deploy contract to mainnet
-    Solana Devnet/Mainnet-->>Lucy (AI Agent): Final contract address & logs
+3. **Security Audits & Best-Practice Validation**
+   - Third-party or community-driven code review of Lucy’s generated modules.  
+   - Automated test suite to minimize vulnerabilities.
 
-    rect rgba(240, 240, 240, 0.5)
-    Note right of Web Portal (Optional): Store code & manage DAO
-    end
-    
-    Lucy (AI Agent)->>Web Portal (Optional): Upload generated code & deployment details
-    Web Portal (Optional)-->>Lucy (AI Agent): Code stored, management UI available
-    Lucy (AI Agent)-->>User: DAO successfully deployed, link to management dashboard
+4. **Mainnet Launch**
+   - Polished Lucy AI agent with improved stability.  
+   - One-click mainnet deployment.  
+   - Real-time user feedback loop and analytics.
+
+### Project Timeline
+
+1. **Phase 1: Research & Architecture (2 weeks)**
+   - Finalize Lucy’s architectural design and Solana integration approach.  
+   - Define DAO template scope (e.g., token-based voting, roles).
+
+2. **Phase 2: AI Integration & Contract Templates (6 weeks)**
+   - Connect Lucy to LLM APIs and build modular code generation.  
+   - Implement base DAO modules in Rust.  
+   - Deploy test versions on devnet, gather feedback.
+
+3. **Phase 3: Website & Advanced Features (4 weeks)**
+   - Develop user-facing portal for code storage and DAO management.  
+   - Establish robust testing, fuzzing, and optional security checks.  
+   - Conduct external security audits.
+
+4. **Phase 4: Public Beta & Mainnet Release (3 weeks)**
+   - Launch Lucy in a public beta with devnet by default.  
+   - Incorporate user feedback, refine UX, fix bugs.  
+   - Activate mainnet deployment and finalize documentation.
+
+### Budget Requested
+
+- **Total**: 40,000 USDC (equivalent in SOL or stablecoins)
+
+### Budget Breakdown
+
+- **Core Development (3 Devs, 10 weeks)**: ~25,000 USDC  
+- **AI & LLM Costs**: ~5,000 USDC  
+- **Front-End & Website Integration**: ~5,000 USDC  
+- **Security Audit & Miscellaneous**: ~5,000 USDC  
+
+*(All figures are approximate and may be refined as the project scope evolves.)*
+
+---
+
+## Team Info
+
+- **Project Lead / AI Orchestrator: [Your Name]**  
+  - *Role*: Oversees architecture, LLM integration, ensures code meets Solana’s development standards.  
+  - *Background*: Full-stack developer with experience in NLP, Rust, and blockchain protocols.
+
+- **Smart Contract Engineer: [Team Member 2]**  
+  - *Role*: Rust-based code modules, Anchor pipelines, custom governance logic.  
+  - *Background*: Experienced in DeFi protocols, Solana security best practices.
+
+- **Front-End & UX Developer: [Team Member 3]**  
+  - *Role*: Builds the user portal, integrates Lucy’s generated code repository and DAO dashboards.  
+  - *Background*: Skilled in React, TypeScript, and Web3 user experiences.
+
+- **Security & DevOps Specialist: [Team Member 4]**  
+  - *Role*: Implements test frameworks, manages CI/CD, and leads security audits.  
+  - *Background*: Blockchain security expert with DevOps pipeline knowledge.
+
+---
+
+## Risks & Mitigations
+
+1. **AI-Generated Code Quality**
+   - **Risk**: Lucy may produce suboptimal or insecure Rust code if the LLM is not specialized or updated.  
+   - **Mitigation**: Maintain curated governance templates, robust integration tests, and periodically retrain or fine-tune the model with the latest best practices.
+
+2. **On-Chain Security Vulnerabilities**
+   - **Risk**: Deployed DAOs could contain logic flaws or lack thorough security checks.  
+   - **Mitigation**: Offer automated testing, recommended “safe module” usage, and external audits.
+
+3. **Cost & Scalability of AI Services**
+   - **Risk**: High LLM query volumes could become expensive or slow.  
+   - **Mitigation**: Implement caching, rate limits, and offline inference for popular code templates.
+
+4. **User Error or Misconfigurations**
+   - **Risk**: Non-technical users might request overly complex or conflicting DAO requirements.  
+   - **Mitigation**: Provide interactive prompts, wizard-based flows, and recommend devnet trials.
+
+---
+
+## Conclusion
+
+**Lucy** sits at the nexus of **AI**, **Solana**, and **DAO governance**, radically simplifying decentralized organization creation via natural language prompts. By automating contract generation, testing, and deployment, Lucy **lowers barriers** to on-chain communities, driving broader Solana adoption.
+
+> **How Projects Will Be Judged**  
+> - **Innovation (💡)**: Introduces a novel workflow—combining LLM-driven code generation with real-time Solana deployment.  
+> - **Impact (🌍)**: Expands access to DAO tools, enabling real-world adoption beyond crypto-native audiences.  
+> - **Technical Execution (🔧)**: Robust architecture blending AI, Rust, and Solana best practices.  
+> - **Usability & Design (🎨)**: Intuitive chat-based approach plus web portal for simple DAO management.  
+> - **Presentation (🎤)**: Clearly communicates end-to-end how Lucy can revolutionize DAO creation.  
+
+Together, let’s build and govern the future—one DAO at a time.
