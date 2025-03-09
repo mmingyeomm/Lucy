@@ -3,21 +3,18 @@
 ---
 
 ## Project Background
-**Lucy** is an AI-driven agent built on top of [Eliza.os](https://github.com/cybermancy/eliza.os) with a single, powerful goal:  
-> *"Enable anyone to create and deploy a DAO smart contract on Solana, seamlessly and securely, using only natural language commands."*
+**Lucy** is an AI-driven agent built on top of [Eliza.os](https://github.com/cybermancy/eliza.os) with a single, powerful mission:
 
-In traditional Solana development, building and launching a DAO involves multiple steps—writing Rust smart contract code, compiling via Anchor or native Solana tooling, configuring governance parameters, and finally deploying the contract to mainnet. This process demands expertise in Web3, Rust, and DevOps, often deterring non-technical innovators.
+> *“Enable anyone to create and deploy a DAO smart contract on Solana, seamlessly and securely, using only natural language commands.”*
 
-Lucy removes these barriers by **automating the entire lifecycle of DAO creation**:
+Traditionally, launching a DAO on Solana involves mastering Rust, Anchor (or native Solana SDK), and configuring complex governance parameters—all of which can be daunting for newcomers and small communities. Lucy dramatically simplifies this by handling every stage of DAO creation:
 
-1. **User Prompt**: A user simply instructs Lucy in plain language. For example:  
-   > "Create a DAO voting contract with token-based governance."
-2. **Code Generation**: Lucy uses large language models to generate production-ready Rust code (Anchor framework or native Solana), tailored to the user’s requirements.
-3. **Compilation & Testing**: The AI Agent automatically tests the contract in a local or remote Solana environment (devnet/testnet).
-4. **Deployment**: Upon user approval, Lucy deploys the DAO contract to the Solana network.
-5. **Management & Storage**: If desired, the user can store the generated code on our website. Lucy then provides a simple conversational interface to interact with the deployed DAO, manage proposals, configure upgrades, and more.
+1. **Natural Language Prompts**: A user states their requirements—for instance, “Create a token-based voting DAO.”  
+2. **AI-Enhanced Code Generation**: Lucy uses large language models to produce production-ready Rust/Anchor contracts, reflecting best practices in governance.  
+3. **Automated Testing & Deployment**: It tests the contract in devnet/testnet environments and then deploys to mainnet at the user’s request.  
+4. **Integrated DAO Management**: If users want, they can store the generated contract code on our platform, where Lucy assists with proposals, token distribution, and governance updates through an intuitive chat or web interface.
 
-By radically simplifying DAO creation, Lucy aspires to **lower the entry barrier** for building decentralized organizations on Solana—empowering not only Web3 developers but also community leaders, project managers, and anyone else looking to establish on-chain governance with minimal friction.
+By merging **technical robustness** (via Rust-based modules and thorough testing) and **user-centric design** (through AI-guided interactions), Lucy seeks to **expand the impact** of decentralized governance on Solana, lowering barriers for both veteran developers and non-technical organizers.
 
 ---
 
@@ -25,88 +22,86 @@ By radically simplifying DAO creation, Lucy aspires to **lower the entry barrier
 
 ### Problem
 
-1. **Complexity in DAO Creation**
-   - **Steep Learning Curve**: Establishing a DAO on Solana typically requires mastery of Rust, the Anchor framework (or raw Solana SDK), and a solid understanding of governance architectures.  
-   - **Fragmented Tooling**: Managing smart contract deployment, testing, and governance configuration involves juggling multiple tools.  
-   - **High Technical Barrier**: Non-technical stakeholders often abandon the idea due to these obstacles.
+1. **High Technical Entry Barrier**  
+   - *Complex Rust & Anchor Requirements*: Non-developers often find the workflow for building DAOs confusing and tedious, from code compilation to configuring governance parameters.  
+   - *Fragmented Tooling & Documentation*: Potential DAO creators must juggle CLIs, tutorials, and security checklists, discouraging them from adopting on-chain governance.
 
-2. **Time-Consuming, Error-Prone Processes**
-   - **Manual Compilation & Deployment**: Writing contracts, manually running `cargo build`, `anchor build`, and then deploying can be tedious. Typos and misconfigurations cause wasted time.  
-   - **Security & Best Practices**: Small DAOs often lack resources to perform thorough testing or audits, resulting in vulnerabilities.
+2. **Error-Prone, Time-Consuming Processes**  
+   - *Manual Builds & Deployments*: Simple typos or misconfigurations in CLI steps can derail entire deployments, wasting effort.  
+   - *Limited Security & Testing Resources*: Smaller teams or communities skip formal audits or thorough testing, exposing them to vulnerabilities.
 
-3. **Lack of Integrated Management & Upgradability**
-   - **Governance Fragmentation**: Once deployed, many DAO contracts remain static. Implementing upgrades or new voting modules is complex.  
-   - **Documentation & Transparency**: Community members may struggle to track code changes, limiting trust and participation.
-
----
+3. **Challenging Upgradability & Ongoing Management**  
+   - *Siloed Governance Frameworks*: Many existing DAO solutions on Solana lack flexibility or require extensive rewrites for new features (e.g., different voting logic).  
+   - *Minimal Transparency & Historical Tracking*: Without a centralized place to store code and proposals, community members struggle to follow upgrades or review past decisions.
 
 ### Solution
 
-Lucy directly tackles these issues with an **end-to-end AI-driven workflow**:
+**Lucy** introduces a **comprehensive, user-friendly approach** to building and managing DAOs on Solana:
 
-1. **AI-Guided Contract Generation**
-   - **Natural Language Prompts**: Users describe DAO requirements (voting mechanism, membership token type, proposal thresholds) in plain English (or other supported languages).  
-   - **Generative Code**: Lucy uses large language model APIs and domain-specific governance templates to produce secure, well-structured Rust code.
+1. **AI-Guided Contract Generation**  
+   - *Natural Language Inputs*: Users specify governance structures, membership models, or voting thresholds in plain text. Lucy translates these into well-structured Rust/Anchor code.  
+   - *Reliability by Design*: The generated contracts embed widely recognized best practices for token-based governance, ensuring security from the start.
 
-2. **Automated Testing & Security Checks**
-   - **Devnet/Testnet Execution**: Lucy simulates the contract on Solana test environments to catch errors.  
-   - **Best-Practice Templates**: Leverages known patterns for token-based governance, roles/permissions, and upgradability.
+2. **Automated Testing & Secure Deployment**  
+   - *Devnet/Testnet Validation*: Lucy runs simulated proposals and votes to confirm correct functionality before mainnet deployment.  
+   - *One-Click Deploy*: With user approval, Lucy manages the entire mainnet deployment flow—compiling, deploying, and providing transaction logs.
 
-3. **One-Click Deployment & DAO Management**
-   - **Seamless Deployment**: Lucy compiles and deploys the smart contract to the Solana mainnet or devnet.  
-   - **DAO Dashboard Integration**: Optional storage of generated code on our website, plus a chat- or web-based interface for proposals, voting, token management, and more.
+3. **DAO Management & Future Upgrades**  
+   - *Optional Code Storage & Dashboard*: Our platform can host each user’s DAO code, governance settings, and historical proposals for easy reference.  
+   - *Modular Upgrades*: Lucy’s architecture supports implementing new governance modules or treasury mechanisms over time without requiring a complete rewrite.
 
-4. **Continuous Interaction & Upgrades**
-   - **Conversational Governance**: Lucy helps interpret on-chain data, propose new governance parameters, or integrate third-party services.  
-   - **Future Expansion**: Lucy’s knowledge base can evolve, adopting advanced modules for identity, treasury management, or cross-chain governance.
+In **fostering innovation**, Lucy merges AI with blockchain dev tooling, providing a frictionless path to decentralized governance. The straightforward UX promotes **wider adoption** and invests in **technical execution** by automating key steps like testing and secure deployment. 
 
 ---
 
-### Impact
+## Impact
 
-1. **Lowering the Barrier to DAO Formation**
-   - Opens DAO creation to community leaders, non-coders, and creative innovators.  
-   - Spurs new governance experiments on Solana.
+1. **Broadening DAO Participation**  
+   - **Inclusivity**: Community organizers, educators, and non-coders can now create DAOs, boosting overall engagement on Solana.  
+   - **Lowered Costs & Effort**: By streamlining deployment and support, Lucy reduces both time and technical overhead for launching on-chain governance.
 
-2. **Accelerated DAO Adoption & Ecosystem Growth**
-   - More DAOs lead to increased usage of Solana’s on-chain services.  
-   - A thriving DAO ecosystem attracts developers, capital, and community members.
+2. **Catalyzing Ecosystem Growth**  
+   - **More DAOs, More Activity**: Easy-to-launch DAOs increase transaction volume, developer interest, and on-chain use cases for Solana.  
+   - **Enhanced Governance Innovation**: With Lucy removing complexity, communities can freely experiment with new forms of proposals, funding mechanisms, or membership structures.
 
-3. **Enhanced Security & Reliability**
-   - Automated checks and test routines reduce vulnerabilities.  
-   - Standardized governance modules ensure best practices.
+3. **Strengthened Trust & Security**  
+   - **Consistent Best Practices**: Lucy’s default templates incorporate secure coding patterns, mitigating typical DAO pitfalls.  
+   - **Transparent On-Chain History**: Storing proposals and code on the platform helps communities build trust through easy verification and accountability.
 
-4. **Fostering On-Chain Community Governance**
-   - A user-friendly interface encourages consistent proposal creation, voting, and community engagement.
+By marrying **user-centric design** with robust testing, Lucy delivers **reliable**, **scalable** DAO deployments that drive **meaningful impact** across various communities and use cases.
 
 ---
 
-### Audience
+## Audience
 
-1. **Non-Technical Community Leaders & Project Managers**
-   - Quick, code-free approach to start a DAO.
+1. **Community Leaders & Non-Technical Organizers**  
+   - *Simplified Workflow*: Focus on governance ideas, not Rust intricacies.  
+   - *Managed Upgrades*: Seamless improvements to the DAO structure without repeated code rewrites.
 
-2. **Web3 Developers & Hackathon Teams**
-   - Saves time by letting Lucy handle repetitive setup tasks and boilerplate governance code.
+2. **Developers & Hackathon Teams**  
+   - *Time-Efficient Setup*: Skip weeks of boilerplate creation, letting Lucy generate a foundation within minutes.  
+   - *Advanced Integrations*: Experienced devs can easily layer specialized features (e.g., multi-signature or cross-chain governance).
 
-3. **Established Organizations Exploring Decentralization**
-   - Experimental route for internal or external on-chain governance.
+3. **Established Organizations Transitioning to On-Chain Governance**  
+   - *Pilot Decentralization*: Rapidly prototype internal governance modules, gauge effectiveness, and scale if successful.  
+   - *Lower Risk*: Automated testing and recommended security patterns mitigate hazards of adopting new, decentralized models.
 
-4. **Educators & Community Builders**
-   - Lucy as a teaching tool to lower intimidation for newcomers.
+4. **Educators & Community Builders**  
+   - *Easy Demonstrations*: Show how DAOs function without bogging students or participants down in CLI complexities.  
+   - *Hands-On Experience*: Encourage new entrants to experiment with real DAOs, reinforcing learning and community growth.
 
 ---
 
 ## Team Info
 
-- **Project Lead: [Mingyeom Kim]**  
-  - *Git*: https://github.com/mmingyeomm
-  - *Twitter*: https://x.com/kimant420
-  - *Telegram*: @mmingyeomm
+- **Project Lead: Mingyeom Kim**  
+  - *Git*: [https://github.com/mmingyeomm](https://github.com/mmingyeomm)  
+  - *Twitter*: [https://x.com/kimant420](https://x.com/kimant420)  
+  - *Telegram*: `@mmingyeomm`
 
-- **Project Member: [Hyuntae Kwon]**  
-  - *Git*: https://github.com/Lyeoul 
-  - *Twitter*: https://x.com/Mual__Lyeoul
-  - *Telegram*: @kkKuhn
+- **Project Member: Hyuntae Kwon**  
+  - *Git*: [https://github.com/Lyeoul](https://github.com/Lyeoul)  
+  - *Twitter*: [https://x.com/Mual__Lyeoul](https://x.com/Mual__Lyeoul)  
+  - *Telegram*: `@kkKuhn`
 
----
+Together, they bring **extensive experience** in Solana development, AI-assisted coding, and user-centric product design. By uniting these disciplines, the team has created a **holistic solution** for DAO creation that aligns with **real-world governance needs**—a solution poised to **grow the Solana ecosystem** and **encourage more communities to embrace decentralization**.
