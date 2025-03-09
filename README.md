@@ -82,26 +82,6 @@ Through these steps, Lucy allows even blockchain beginners to build and manage a
 
 ---
 
-## Target Audience
-
-1. **Community Leaders & Non-Developers**  
-   - Can create and operate a DAO with *simple natural language commands*.  
-   - Easily request *continuous upgrades* or changes to voting rules through Lucy.
-
-2. **Developers & Hackathon Teams**  
-   - *Rapid Prototyping*: Lucy provides the foundational DAO code, letting developers focus on key features.  
-   - *Custom Extensibility*: If needed, developers can directly modify the Rust code or integrate modules for advanced functionality.
-
-3. **Organizations Transitioning to On-Chain Governance**  
-   - *Minimal Risk*: Pre-deployment simulation and automated testing ensure security.  
-   - *Decentralization Pilot*: They can test on-chain decision-making processes for internal votes or project planning.
-
-4. **Educators & Community Builders**  
-   - *Hands-On Learning*: Students or newcomers can practice DAO concepts without complex CLI operations.  
-   - *Community Learning Enhancement*: Easily compare and study multiple DAO examples on a single platform.
-
----
-
 ## Team Info
 
 - **Project Lead: Mingyeom Kim**  
