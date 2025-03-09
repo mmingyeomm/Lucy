@@ -54,7 +54,7 @@ Through this process, **even those without extensive technical expertise** can e
 3. **Phase 3: Code Generation & Deployment**  
    - Based on the finalized requirements, Lucy provides the Rust smart contract code in a format that **starts with “rust” and ends with “end contract”**.  
    - During this step, **only** the code necessary for deployment is provided, with **no extra commentary**.  
-   - After reviewing the code, if the user says “Proceed with deployment,” Lucy can **one-click deploy** to the Solana devnet/testnet and then to mainnet.  
+   - After reviewing the code, if the user says “Proceed with deployment,” Lucy can **auto deploy** to the Solana devnet/testnet and then to mainnet.  
    - If at any point the user wants additional features, Lucy returns to Phase 2 to adjust the requirements.
 
 4. **Phase 4: DAO Management**  
