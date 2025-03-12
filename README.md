@@ -1,5 +1,12 @@
+Our commit logs are in this link we moved directories due to git problems
+
+
+https://github.com/mmingyeomm/DAOagent
+
+
 # Lucy (Eliza.os-based Solana DAO Agent)
 
+![Image](https://github.com/user-attachments/assets/85e88107-8c6a-40d2-a682-57a9c660f10e)
 ---
 
 ## Project Background
@@ -82,26 +89,6 @@ Through these steps, Lucy allows even blockchain beginners to build and manage a
 
 ---
 
-## Target Audience
-
-1. **Community Leaders & Non-Developers**  
-   - Can create and operate a DAO with *simple natural language commands*.  
-   - Easily request *continuous upgrades* or changes to voting rules through Lucy.
-
-2. **Developers & Hackathon Teams**  
-   - *Rapid Prototyping*: Lucy provides the foundational DAO code, letting developers focus on key features.  
-   - *Custom Extensibility*: If needed, developers can directly modify the Rust code or integrate modules for advanced functionality.
-
-3. **Organizations Transitioning to On-Chain Governance**  
-   - *Minimal Risk*: Pre-deployment simulation and automated testing ensure security.  
-   - *Decentralization Pilot*: They can test on-chain decision-making processes for internal votes or project planning.
-
-4. **Educators & Community Builders**  
-   - *Hands-On Learning*: Students or newcomers can practice DAO concepts without complex CLI operations.  
-   - *Community Learning Enhancement*: Easily compare and study multiple DAO examples on a single platform.
-
----
-
 ## Team Info
 
 - **Project Lead: Mingyeom Kim**  
@@ -115,3 +102,8 @@ Through these steps, Lucy allows even blockchain beginners to build and manage a
   - *Telegram*: `@kkKuhn`
 
 Both members have experience in **Solana smart contract** implementation and **AI-driven process design**, aiming to balance **technical expertise** with **user experience**. In particular, Lucy’s **4-phase structure** organizes the DAO creation workflow to meticulously reflect **step-by-step requirements** and ensure **stable deployments**. This approach will enable anyone in the Solana ecosystem who needs a DAO to easily and securely implement **decentralized governance**.
+
+---
+
+## Lucy always by your side.
+![Image](https://github.com/user-attachments/assets/a835e803-9c13-4112-8827-fc975ce5d37f)
