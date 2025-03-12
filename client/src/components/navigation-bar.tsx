@@ -35,19 +35,13 @@ export function NavigationBar() {
             {/* Header Bar */}
             <div className="p-4 flex items-center justify-between gap-3 bg-background/40 backdrop-blur-sm border-b border-primary/20 z-10">
                 <div className="flex items-center gap-3">
-                    <div className="ai-avatar size-8">
-                        <div className="ai-avatar-ring"></div>
-                        <div className="ai-face-container">
-                            <div className="ai-face">
-                                <div className="ai-face-inner">
-                                    <div className="ai-patterns"></div>
-                                    <div className="ai-circuits"></div>
-                                    <div className="ai-eye ai-eye-left"></div>
-                                    <div className="ai-eye ai-eye-right"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <NavLink to="/">
+                        <img 
+                            src="/lucy-icon.png" 
+                            alt="Lucy" 
+                            className="h-9 w-9 rounded-full ring-2 ring-primary/30 shadow-lg hover:ring-primary/50 transition-all" 
+                        />
+                    </NavLink>
                     <div className="flex flex-col">
                         <div className="font-medium">Lucy DAO</div>
                         <div className="text-xs text-muted-foreground flex items-center gap-1">
@@ -72,19 +66,6 @@ export function NavigationBar() {
             
             {/* Navigation Menu */}
             <div className="border-b border-primary/10 w-full bg-card/30 backdrop-blur-sm px-4 py-2 flex justify-center gap-6">
-                {/* Navigation Logo */}
-                <NavLink to="/" className="flex items-center gap-2">
-                    <motion.div 
-                        className="size-7 flex items-center justify-center bg-primary text-primary-foreground font-bold rounded-full border border-cyan-300/30"
-                        animate={animateIcons ? {
-                            scale: [1, 1.1, 1],
-                            borderColor: ['hsla(180, 100%, 70%, 0.3)', 'hsla(180, 100%, 90%, 0.8)', 'hsla(180, 100%, 70%, 0.3)']
-                        } : {}}
-                        transition={{ duration: 1.5 }}
-                    >
-                        L
-                    </motion.div>
-                </NavLink>
                 
                 {/* Agents Menu */}
                 <div className="flex items-center gap-4">

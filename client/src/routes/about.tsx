@@ -47,7 +47,7 @@ export default function AboutRoute() {
                         <div className="p-6 bg-primary/5 rounded-xl border border-primary/10 mb-6">
                             <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
                             <p className="text-lg leading-relaxed">
-                                Lucy aim to democratize on-chain governance by empowering anyone—regardless of technical background—to build, launch, and manage decentralized organizations on Solana. By merging AI-based code generation with secure deployment workflows, Lucy reduces development barriers and accelerates community-driven innovation in the Web3 space.
+                                Lucy aims to democratize on-chain governance by empowering anyone—regardless of technical background—to build, launch, and manage decentralized organizations on Solana. By merging AI-based code generation with secure deployment workflows, Lucy reduces development barriers and accelerates community-driven innovation in the Web3 space.
                             </p>
                         </div>
                         

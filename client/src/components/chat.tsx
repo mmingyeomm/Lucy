@@ -196,21 +196,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
                             ]
                         );
                         
-                        // Then, add the Phase 4 message with a proper delay (2 seconds)
-                        setTimeout(() => {
-                            queryClient.setQueryData(
-                                ["messages", agentId],
-                                (old: ContentWithUser[] = []) => [
-                                    ...old,
-                                    {
-                                        text: "Phase 4: The contract has been successfully deployed. The deployed smart contract can be registered on the Lucy web for ongoing management. Would you like to proceed with management registration? (Yes or No)",
-                                        user: "system",
-                                        createdAt: Date.now(),
-                                        source: "System"
-                                    }
-                                ]
-                            );
-                        }, 2000);
+                        
                     } else {
                         // If deployment failed, just show the error message
                         queryClient.setQueryData(
@@ -538,13 +524,14 @@ export default function Page({ agentId }: { agentId: UUID }) {
     const CustomAnimatedDiv = animated.div as React.FC<AnimatedDivProps>;
 
     return (
-        <div className="flex flex-col w-full h-[calc(100dvh)] p-4">
-            <div className="flex-1 overflow-y-auto">
+        <div className="flex flex-col w-full h-[calc(100dvh-4rem)] p-4 mt-20">
+            <div className="flex-1 overflow-y-auto pt-6">
                 <ChatMessageList 
                     scrollRef={scrollRef}
                     isAtBottom={isAtBottom}
                     scrollToBottom={scrollToBottom}
                     disableAutoScroll={disableAutoScroll}
+                    className="pt-4"
                 >
                     {transitions((style, message: ContentWithUser) => {
                         const variant = getMessageVariant(message?.user);
