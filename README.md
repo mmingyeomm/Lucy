@@ -111,6 +111,7 @@ node server.js
 ```
 
 **Precautions**
+
 In phase 3, you must enter "deploy" for the deployment to be completed.
 In the case of the character.json file, it is not disclosed as it represents the entirety of Lucy.
 If Lucy does not satisfy the conditions related to a phase, she can return to the previous phase or repeat the current phase.
