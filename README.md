@@ -89,6 +89,34 @@ Through these steps, Lucy allows even blockchain beginners to build and manage a
 
 ---
 
+## How to run & Precautions
+
+**Start Lucy**
+```
+cd Lucy
+pnpm i && pnpm build
+pnpm start --characters="path/to/your/character.json"
+```
+
+**Start client**
+```
+cd Lucy
+pnpm start:client
+```
+
+**Start deploy server**
+```
+cd Lucy\ac\app
+node server.js 
+```
+
+**Precautions**
+In phase 3, you must enter "deploy" for the deployment to be completed.
+In the case of the character.json file, it is not disclosed as it represents the entirety of Lucy.
+If Lucy does not satisfy the conditions related to a phase, she can return to the previous phase or repeat the current phase.
+
+---
+
 ## Team Info
 
 - **Project Lead: Mingyeom Kim**  
